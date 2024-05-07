@@ -5,3 +5,5 @@ CREATE TABLE IF NOT EXISTS Product (
 );
 CREATE INDEX IF NOT EXISTS product_name_index ON Product (name);
 
+ALTER TABLE Product
+ADD COLUMN evaporation_rate DECIMAL(10, 2);
