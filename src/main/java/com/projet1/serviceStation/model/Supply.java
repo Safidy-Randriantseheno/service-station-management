@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -12,8 +13,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Supply {
     private UUID id;
-    private Station station;
-    private Product product;
-    private LocalDate dateSupply;
+    private UUID idStation;
+    private String productType;
+    private LocalDateTime supplyDate;
     private double quantity;
 }
