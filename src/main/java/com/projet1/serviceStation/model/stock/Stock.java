@@ -13,10 +13,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Stock {
     private UUID id;
-    private UUID idStation;
     private UUID idProduct;
     private BigDecimal quantity;
-    private BigDecimal evaporationRate;
     private LocalDateTime lastUpdated;
 
 }

@@ -2,6 +2,8 @@ package com.projet1.serviceStation.repository;
 
 import com.projet1.serviceStation.DataBaseConnection;
 import com.projet1.serviceStation.model.Product;
+import com.projet1.serviceStation.model.ProductTemplate;
+import com.projet1.serviceStation.model.Station;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -27,11 +29,11 @@ public class ProductRepository implements CrudOperation<Product> {
              ResultSet rs = stmt.executeQuery(query)) {
 
             while (rs.next()) {
-                UUID id = UUID.fromString(rs.getString("id"));
-                String name = rs.getString("name");
-                Double currentPrice = rs.getDouble("current_price");
+                ProductTemplate productTemplate = (ProductTemplate) rs.getObject("productTemplate");
+                Station station = (Station) rs.getObject("station");
+                Double quantity = rs.getDouble("quantity");
 
-                Product product = new Product(id, name, currentPrice);
+                Product product = new Product(productTemplate, station, quantity);
                 productList.add(product);
             }
 
@@ -49,12 +51,11 @@ public class ProductRepository implements CrudOperation<Product> {
 
     @Override
     public Product save(Product toSave) {
-        String query = "INSERT INTO Product (id, name, current_price) VALUES (?, ?, ?)";
+        String query = "INSERT INTO Product (productTemplate, idStation, quantity) VALUES (?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setObject(1, toSave.getId());
-            pstmt.setString(2, toSave.getName());
-            pstmt.setDouble(3, toSave.getCurrentPrice());
-
+            pstmt.setObject(1, toSave.getProductTemplate());
+            pstmt.setObject(1, toSave.getIdStation());
+            pstmt.setDouble(1, toSave.getQuantity());
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
                 return toSave;
@@ -67,11 +68,10 @@ public class ProductRepository implements CrudOperation<Product> {
 
     @Override
     public Product update(Product toUpdate) {
-        String query = "UPDATE Product SET name = ?, current_price = ? WHERE id = ?";
+        String query = "UPDATE Product quantity = quantity - (evaporation_rat * DATEDIFF(CURDATE(), lastUpdate))" + " WHERE evaporation_rate > 0";
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, toUpdate.getName());
-            pstmt.setDouble(2, toUpdate.getCurrentPrice());
-            pstmt.setObject(3, toUpdate.getId());
+            pstmt.setObject(1, toUpdate.getProductTemplate());
+            pstmt.setDouble(2, toUpdate.getQuantity());
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -85,17 +85,6 @@ public class ProductRepository implements CrudOperation<Product> {
 
     @Override
     public Product delete(Product toDelete) {
-        String query = "DELETE FROM Product WHERE id = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setObject(1, toDelete.getId());
-
-            int rowsAffected = pstmt.executeUpdate();
-            if (rowsAffected > 0) {
-                return toDelete;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         return null;
 
     }

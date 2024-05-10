@@ -4,4 +4,3 @@ CREATE TABLE IF NOT EXISTS Station (
     location VARCHAR(255) NOT NULL
 );
 CREATE INDEX  IF NOT EXISTS station_name_index ON Station (name);
-

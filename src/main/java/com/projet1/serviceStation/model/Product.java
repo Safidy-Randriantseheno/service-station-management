@@ -12,6 +12,11 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Product {
     private UUID id;
-    private String name;
-    private Double currentPrice;
+    private ProductTemplate productTemplate;
+    private Station idStation;
+    private BigDecimal evaporationRate;
+    private Double quantity;
+
+    public Product(ProductTemplate productTemplate, Station station, Double quantity) {
+    }
 }

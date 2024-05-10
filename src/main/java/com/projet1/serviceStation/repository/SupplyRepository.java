@@ -1,6 +1,7 @@
 package com.projet1.serviceStation.repository;
 
 import com.projet1.serviceStation.DataBaseConnection;
+import com.projet1.serviceStation.model.Product;
 import com.projet1.serviceStation.model.Supply;
 import org.springframework.stereotype.Repository;
 
@@ -30,12 +31,11 @@ public class SupplyRepository implements CrudOperation<Supply> {
 
             while (rs.next()) {
                 UUID id = UUID.fromString(rs.getString("id"));
-                UUID id_station = UUID.fromString(rs.getString("id_station"));
-                String product_type = rs.getString("product_type");
+                Product product = (Product) rs.getObject("product");
                 LocalDateTime supply_date = rs.getTimestamp("supply_date").toLocalDateTime();
                 double quantity = rs.getDouble("quantity");
 
-                Supply supply = new Supply(id, id_station, product_type, supply_date, quantity);
+                Supply supply = new Supply(id, product, supply_date, quantity);
                 supplies.add(supply);
             }
 
@@ -59,7 +59,7 @@ public class SupplyRepository implements CrudOperation<Supply> {
     @Override
     public Supply update(Supply toUpdate) {
         Connection conn = dbConnection.getConnection();
-        UUID idStation = toUpdate.getIdStation();
+        Product product = toUpdate.getProduct();
         LocalDateTime supplyDate = toUpdate.getSupplyDate();
         double quantitySupplied = toUpdate.getQuantity();
 
@@ -67,7 +67,7 @@ public class SupplyRepository implements CrudOperation<Supply> {
 
         try (PreparedStatement updateStmt = conn.prepareStatement(updateStockQuery)) {
             updateStmt.setDouble(1, quantitySupplied);
-            updateStmt.setObject(2, idStation);
+            updateStmt.setObject(2,product);
             updateStmt.setTimestamp(3, java.sql.Timestamp.valueOf(supplyDate));
 
             int rowsAffected = updateStmt.executeUpdate();

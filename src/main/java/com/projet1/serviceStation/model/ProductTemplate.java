@@ -4,16 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Supply {
+public class ProductTemplate {
     private UUID id;
-    private Product product;
-    private LocalDateTime supplyDate;
-    private double quantity;
+    private String name;
+    private Double currentPrice;
 }
